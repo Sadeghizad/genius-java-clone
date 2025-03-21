@@ -7,7 +7,7 @@ public class Comment {
     private final String content;
     private final Date date;
 
-    public Comment(Account account, String content, Date date, Song song) {
+    public Comment(Account account, String content, Song song) {
         this.account = account;
         this.content = content;
         this.date = new Date(); // current timestamp
