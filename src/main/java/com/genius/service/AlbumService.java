@@ -1,4 +1,4 @@
-package com.genuis.service;
+package com.genius.service;
 
 public class AlbumService {
 }

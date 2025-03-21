@@ -1,4 +1,4 @@
-package com.genuis.data;
+package com.genius.data;
 
 public class FileHandler {
 }

@@ -1,4 +1,4 @@
-package com.genuis.models;
+package com.genius.model;
 
 
 import java.nio.charset.StandardCharsets;
@@ -18,11 +18,10 @@ public abstract class Account {
         READ,
         EDIT,
         EDIT_APPROVAL,
-        DELETE,
-        UPDATE,
         FOLLOW,
         COMMENT
     }
+
     private Set<Permission> permissions = new HashSet<>();
 
     public Account(String name, int age, String email, String username, String password) {

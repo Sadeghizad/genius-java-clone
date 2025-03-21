@@ -1,4 +1,4 @@
-package com.genuis.ui;
+package com.genius.ui;
 
 public class ArtistMenu {
 }
