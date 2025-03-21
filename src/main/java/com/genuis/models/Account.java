@@ -11,9 +11,9 @@ public abstract class Account {
     private String name;
     private int age;
     private String email;
-    private String username;
+    private final String username;
     private String password;
-    private static Set<String> usernames=new HashSet<>();
+    private static final Set<String> usernames=new HashSet<>();
     public enum Permission {
         READ,
         EDIT,
