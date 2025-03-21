@@ -1,6 +1,9 @@
 package com.genuis.models;
 
-import java.util.ArrayList;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +13,6 @@ public abstract class Account {
     private String email;
     private String username;
     private String password;
-    private boolean isLoggedIn =false;
     private static Set<String> usernames=new HashSet<>();
     public enum Permission {
         READ,
@@ -36,11 +38,11 @@ public abstract class Account {
         this.age = age;
         this.email = email;
         this.username = username;
-        this.password = password;
+        this.password = hashPassword(password);
         usernames.add(username);
     }
 
-    public boolean isUsernameTaken(String username) {
+    public static boolean isUsernameTaken(String username) {
         return usernames.contains(username);
     }
     public String getName() {
@@ -64,22 +66,32 @@ public abstract class Account {
     public String getUsername() {
         return username;
     }
-    public void givePermissions(ArrayList<Permission> permissions) {
+    public void givePermissions(Set<Permission> permissions) {
         for (Permission permission : permissions) {
             this.permissions.add(permission);
         }
     }
-    public void login(String username, String password) {
-        if(username.equals(this.username) && password.equals(this.password)) {
-            isLoggedIn = true;
-        }else{
-            throw new IllegalArgumentException("Invalid username or password.");
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 not supported");
         }
     }
-    public void logout() {
-        isLoggedIn = false;
-    }
-    public boolean isLoggedIn() {
-        return isLoggedIn;
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Age: " + age + ", Email: " + email + ", Username: " + username;
     }
 }
