@@ -65,6 +65,11 @@ public abstract class Account {
     public String getUsername() {
         return username;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
     public void givePermissions(Set<Permission> permissions) {
         for (Permission permission : permissions) {
             this.permissions.add(permission);

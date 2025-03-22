@@ -2,7 +2,6 @@ package com.genius.service;
 
 import com.genius.data.DataStore;
 import com.genius.model.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,34 +9,52 @@ public class SeedDataService {
 
     public static void generate() {
         // Admin
-        Admin admin = new Admin("AdminGuy", 35, "admin@g.com", "admin", "admin123");
+        Admin admin = new Admin("Admin One", 35, "admin@g.com", "admin", "admin123");
         DataStore.accounts.put(admin.getUsername(), admin);
 
         // Artist
-        Artist artist = new Artist("Ali Artist", 30, "ali@music.com", "ali_artist", "pass123");
-        DataStore.accounts.put(artist.getUsername(), artist);
+        Artist artist1 = new Artist("Shervin", 28, "shervin@genius.com", "shervin", "pass1");
+        Artist artist2 = new Artist("Yas", 32, "yas@genius.com", "yas", "pass2");
+        DataStore.accounts.put(artist1.getUsername(), artist1);
+        DataStore.accounts.put(artist2.getUsername(), artist2);
 
         // User
-        User user = new User("Sara Listener", 22, "sara@user.com", "sara", "1234");
-        DataStore.accounts.put(user.getUsername(), user);
+        User user1 = new User("Mina", 22, "mina@user.com", "mina", "1234");
+        User user2 = new User("Reza", 20, "reza@user.com", "reza", "4321");
+        DataStore.accounts.put(user1.getUsername(), user1);
+        DataStore.accounts.put(user2.getUsername(), user2);
 
         // Song
-        Song song = new Song("Midnight Sky", "These are some lyrics", "Pop",
-                List.of("pop", "midnight"), LocalDate.of(2023, 5, 20), null, List.of(artist.getUsername()));
-        DataStore.songs.put(song.getId(), song);
-        artist.addSong(song.getId());
+        Song song1 = SongService.createSong("Iran", "Land of my heart", "Patriotic",
+                List.of("country", "pride"), LocalDate.of(2022, 3, 1), null, List.of("shervin"));
 
-        // Comment
-        Comment comment = new Comment(user, "Amazing track!", song);
+        Song song2 = SongService.createSong("Freedom", "We fight for it", "Rap",
+                List.of("freedom", "power"), LocalDate.of(2022, 6, 10), null, List.of("yas"));
+
+        Song song3 = SongService.createSong("Together", "Let’s rise up", "Rap",
+                List.of("unity", "hope"), LocalDate.of(2023, 1, 5), null, List.of("yas", "shervin"));
 
         // Album
-        Album album = new Album("Dreamland", LocalDate.of(2023, 5, 25), artist.getUsername());
-        album.addSong(song.getId());
-        DataStore.albums.put(album.getId(), album);
-        artist.addAlbum(album.getId());
+        Album album1 = AlbumService.createAlbum("Voices", LocalDate.of(2023, 2, 1), artist2);
+        AlbumService.addSongsToAlbum(album1.getId(), List.of(song2.getId(), song3.getId()));
 
-        // Lyric Edit
-        LyricEdit edit = new LyricEdit(song.getId(), "These are some NEW lyrics", user.getUsername());
-        DataStore.lyricEdits.add(edit);
+        // Comments
+        CommentService.addComment(user1, "So powerful!", song1);
+        CommentService.addComment(user2, "This is 🔥", song2);
+        CommentService.addComment(user1, "Love the message", song3);
+
+        // Lyric edits
+        EditService.suggestEdit(song1.getId(), "Updated: Heart of my land", "mina");
+        EditService.suggestEdit(song2.getId(), "Updated: Fighting for rights", "reza");
+
+        // Follows
+        FollowService.followArtist(user1, "shervin");
+        FollowService.followArtist(user1, "yas");
+        FollowService.followArtist(user2, "yas");
+
+        // Views
+        SongService.incrementView(song1.getId());
+        SongService.incrementView(song1.getId());
+        SongService.incrementView(song2.getId());
     }
 }

@@ -34,6 +34,10 @@ public class Album {
         return artistUsername;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     @Override
     public String toString() {
         return "Album: " + title + ", By: " + artistUsername + ", Released: " + releaseDate;

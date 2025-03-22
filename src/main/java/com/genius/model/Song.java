@@ -46,6 +46,26 @@ public class Song {
         return comments;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getLyrics() {
+        return lyrics;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setLyrics(String lyrics) {
+        this.lyrics = lyrics;
+    }
+
     public List<String> getArtistUsernames() {
         return artistUsernames;
     }
