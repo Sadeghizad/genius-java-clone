@@ -9,14 +9,16 @@ public class SeedDataService {
 
     public static void generate() {
         // Admin
-        Admin admin = new Admin("Admin One", 35, "admin@g.com", "admin", "admin123");
+        Admin admin = new Admin("Admin1", 35, "admin@g.com", "admin", "admin123");
         DataStore.accounts.put(admin.getUsername(), admin);
 
         // Artist
         Artist artist1 = new Artist("Shervin", 28, "shervin@genius.com", "shervin", "pass1");
         Artist artist2 = new Artist("Yas", 32, "yas@genius.com", "yas", "pass2");
+        Artist artist3 = new Artist("Moein", 84, "moein@genius.com", "moein", "pass3");
         DataStore.accounts.put(artist1.getUsername(), artist1);
         DataStore.accounts.put(artist2.getUsername(), artist2);
+        DataStore.accounts.put(artist3.getUsername(), artist3);
 
         // User
         User user1 = new User("Mina", 22, "mina@user.com", "mina", "1234");

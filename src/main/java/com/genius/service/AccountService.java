@@ -25,7 +25,9 @@ public class AccountService {
     public static Account login(String username, String password) {
         Account acc = DataStore.accounts.get(username);
         if (acc == null) throw new IllegalArgumentException("Account not found.");
-
+        if (acc instanceof Artist artist && !artist.isApproved()) {
+            throw new IllegalArgumentException("Artist account not approved yet by admin.");
+        }
         // hash input to compare with stored hashed password
         String hashedInput = hash(password);
         if (!acc.getPassword().equals(hashedInput)) {

@@ -42,4 +42,9 @@ public class Album {
     public String toString() {
         return "Album: " + title + ", By: " + artistUsername + ", Released: " + releaseDate;
     }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
 }
