@@ -1,5 +1,7 @@
 package com.genius.model;
 
+import com.genius.service.AlbumService;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -68,6 +70,10 @@ public class Song {
 
     public List<String> getArtistUsernames() {
         return artistUsernames;
+    }
+
+    public Album getAlbum() {
+        return AlbumService.getAlbumById(albumId);
     }
 
     @Override

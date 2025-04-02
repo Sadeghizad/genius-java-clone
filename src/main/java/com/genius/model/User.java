@@ -1,6 +1,8 @@
 package com.genius.model;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class User extends Account {
@@ -28,4 +30,5 @@ public class User extends Account {
     public String toString() {
         return "[User] " + super.toString();
     }
+
 }

@@ -45,8 +45,9 @@ public class SignupScreen {
                 message.setText(ex.getMessage());
             }
         });
-
-        VBox layout = new VBox(10, label, nameField, ageField, emailField, usernameField, passwordField, roleBox, signupBtn, message);
+        Button back = new Button("Back");
+        back.setOnAction(e -> new Main().start(stage));
+        VBox layout = new VBox(10, label, nameField, ageField, emailField, usernameField, passwordField, roleBox, signupBtn, message,back);
         layout.setStyle("-fx-padding: 20; -fx-alignment: center");
 
         stage.setScene(new Scene(layout, 400, 450));

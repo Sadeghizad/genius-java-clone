@@ -37,4 +37,15 @@ public class AlbumService {
     public static List<Album> getAllAlbums() {
         return List.copyOf(DataStore.albums.values());
     }
+    public static void createAlbum(String title, LocalDate releaseDate, String artistUsername, List<String> songIds) {
+        Album album = new Album(title, releaseDate, artistUsername);
+        songIds.forEach(album::addSong);  // Add songs in the provided order
+        DataStore.albums.put(album.getId(), album); // Save the album to DataStore
+    }
+
+    public static List<Album> getAllAlbumsByArtist(String username) {
+        return getAllAlbums().stream()
+                .filter(e -> e.getArtistUsername() != null && e.getArtistUsername().equals(username))
+                .toList();
+    }
 }

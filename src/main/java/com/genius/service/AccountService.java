@@ -3,6 +3,9 @@ package com.genius.service;
 import com.genius.data.DataStore;
 import com.genius.model.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class AccountService {
 
     public static Account signup(String name, int age, String email, String username, String password, String role) {
@@ -47,5 +50,11 @@ public class AccountService {
         } catch (Exception e) {
             throw new RuntimeException("Hashing error.");
         }
+    }
+    public static List<Artist> getAllArtists() {
+        return DataStore.accounts.values().stream()
+                .filter(acc -> acc instanceof Artist)
+                .map(acc -> (Artist) acc)
+                .collect(Collectors.toList());
     }
 }

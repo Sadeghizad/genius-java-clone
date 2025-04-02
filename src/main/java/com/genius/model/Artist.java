@@ -8,6 +8,7 @@ public class Artist extends Account {
     private final Set<String> songIds = new HashSet<>();
     private final Set<String> albumIds = new HashSet<>();
     private boolean isApproved = false;
+    private int totalViews = 0;
 
     public Artist(String name, int age, String email, String username, String password) {
         super(name, age, email, username, password);
@@ -37,6 +38,14 @@ public class Artist extends Account {
 
     public void approve() {
         this.isApproved = true;
+    }
+
+    public int getTotalViews() {
+        return totalViews;
+    }
+
+    public void setTotalViews(int totalViews) {
+        this.totalViews = totalViews;
     }
 
     @Override

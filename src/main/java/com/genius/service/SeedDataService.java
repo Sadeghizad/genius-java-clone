@@ -14,6 +14,7 @@ public class SeedDataService {
 
         // Artist
         Artist artist1 = new Artist("Shervin", 28, "shervin@genius.com", "shervin", "pass1");
+        artist1.approve();
         Artist artist2 = new Artist("Yas", 32, "yas@genius.com", "yas", "pass2");
         Artist artist3 = new Artist("Moein", 84, "moein@genius.com", "moein", "pass3");
         DataStore.accounts.put(artist1.getUsername(), artist1);

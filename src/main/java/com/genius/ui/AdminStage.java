@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class AdminStage {
+public class AdminStage extends BaseStage {
 
     public static void show(Stage stage, Admin admin) {
         Label welcome = new Label("Welcome Admin: " + admin.getName());
@@ -112,12 +112,5 @@ public class AdminStage {
         subStage.setScene(new Scene(box, 500, 550));
         subStage.setTitle("Manage Accounts");
         return subStage;
-    }
-
-    private static void show(String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 }

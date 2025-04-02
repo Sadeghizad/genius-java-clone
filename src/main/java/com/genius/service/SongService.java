@@ -1,6 +1,7 @@
 package com.genius.service;
 
 import com.genius.data.DataStore;
+import com.genius.model.Album;
 import com.genius.model.Artist;
 import com.genius.model.Song;
 
@@ -22,6 +23,7 @@ public class SongService {
 
         return song;
     }
+    
 
     public static Song getSongById(String id) {
         return DataStore.songs.get(id);
@@ -34,5 +36,20 @@ public class SongService {
 
     public static List<Song> getAllSongs() {
         return List.copyOf(DataStore.songs.values());
+    }
+
+    public static List<Song> getSongsByArtist(String username) {
+        return getAllSongs().stream()
+                .filter(e -> e.getArtistUsernames() != null && e.getArtistUsernames().contains(username))
+                .toList();
+    }
+
+    public static List<Song> getSongsByAlbum(Album album) {
+        return getAllSongs().stream()
+                .filter(e -> e.getAlbum() != null && e.getAlbum().equals(album))
+                .toList();
+    }
+    public static void updateSong(Song song) {
+        DataStore.songs.put(song.getId(), song); // Save the updated song to the DataStore
     }
 }

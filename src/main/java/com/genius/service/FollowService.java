@@ -56,4 +56,8 @@ public class FollowService {
         }
         return albums;
     }
+
+    public static boolean isFollowing(User loggedInUser, String username) {
+        return loggedInUser.getFollowedArtists().contains(username);
+    }
 }

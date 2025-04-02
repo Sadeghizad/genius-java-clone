@@ -1,16 +1,17 @@
 package com.genius.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class Comment {
     private final Account account;
     private final String content;
-    private final Date date;
+    private final LocalDate date;
 
     public Comment(Account account, String content, Song song) {
         this.account = account;
         this.content = content;
-        this.date = new Date(); // current timestamp
+        this.date = LocalDate.now(); // current timestamp
         song.addComment(this);
     }
 
@@ -18,4 +19,9 @@ public class Comment {
     public String toString() {
         return "username: "+account.getName()+", content: "+content+", date: "+date;
     }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
 }
