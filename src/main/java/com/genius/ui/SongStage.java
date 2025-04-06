@@ -14,7 +14,7 @@ import java.util.Comparator;
 public class SongStage extends BaseStage {
 
     public static void show(Stage stage, Song song, User user) {
-        SongService.incrementView(song.getId());
+        SongService.incrementView(song.getId(), user.getUsername());
 
         // Labels for Song details
         Label title = new Label("Title: " + song.getTitle());
@@ -141,7 +141,7 @@ public class SongStage extends BaseStage {
         submitButton.setOnAction(e -> {
             String newLyrics = songLyricsArea.getText();
             song.setLyrics(newLyrics);
-            SongService.updateSong(artist,song);
+            SongService.updateSong(song);
 
             showText("Song Updated", "Lyrics updated successfully!");
 

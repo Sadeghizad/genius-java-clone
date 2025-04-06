@@ -3,6 +3,7 @@ package com.genius.service;
 import com.genius.data.DataStore;
 import com.genius.model.Album;
 import com.genius.model.Artist;
+import com.genius.model.Song;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,12 +18,15 @@ public class AlbumService {
     }
 
     public static void addSongsToAlbum(String albumId, List<String> songIds) {
-        Album album = DataStore.albums.get(albumId);
-        if (album == null) throw new IllegalArgumentException("Album not found.");
-
-        for (String songId : songIds) {
-            if (!DataStore.songs.containsKey(songId)) continue;
-            album.addSong(songId);
+        Album album = getAlbumById(albumId);
+        if (album == null) return;
+        for (String id : songIds) {
+            album.addSong(id);
+            Song song = SongService.getSongById(id);
+            if (song != null) {
+                song.setAlbumId(albumId);
+                SongService.updateSong(song);
+            }
         }
     }
 
@@ -47,4 +51,17 @@ public class AlbumService {
                 .filter(e -> e.getArtistUsername() != null && e.getArtistUsername().equals(username))
                 .toList();
     }
+    public static void removeSongFromAlbum(String albumId, String songId) {
+        Album album = getAlbumById(albumId);
+        if (album != null) {
+            Song song = SongService.getSongById(songId);
+            if (song != null) {
+                song.setAlbumId(null);
+                album.removeSong(songId);
+                SongService.updateSong(song);
+            }
+        }
+    }
+
+
 }

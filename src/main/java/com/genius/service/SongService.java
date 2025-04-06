@@ -25,6 +25,10 @@ public class SongService {
             throw new IllegalArgumentException("At least one artist is required.");
         }
         Song song = new Song(title, lyrics, genre, tags, releaseDate, albumId, artistUsernames);
+        if (albumId != null) {
+            Album album = AlbumService.getAlbumById(albumId);
+            if (album != null) album.addSong(song.getId());
+        }
         DataStore.songs.put(song.getId(), song);
 
         for (String username : artistUsernames) {
@@ -42,10 +46,14 @@ public class SongService {
         return DataStore.songs.get(id);
     }
 
-    public static void incrementView(String songId) {
+    public static void incrementView(String songId, String username) {
         Song song = DataStore.songs.get(songId);
-        if (song != null) song.incrementViews();
+        if (song != null) {
+            boolean added = song.addView(username);
+            if (added) updateSong(song);
+        }
     }
+
 
     public static List<Song> getAllSongs() {
         return List.copyOf(DataStore.songs.values());
@@ -69,11 +77,7 @@ public class SongService {
         }
         return List.copyOf(tags); // Return the unique tags as a list
     }
-    public static void updateSong(Account account ,Song song) {
-        if (account.getPermissions().contains(Account.Permission.EDIT) && ((account instanceof Artist && song.getArtistUsernames().contains(account.getUsername())) || (account instanceof Admin))) {
+    public static void updateSong(Song song) {
             DataStore.songs.put(song.getId(), song); // Save the updated song to the DataStore
-        } else {
-            throw new IllegalArgumentException("You do not have permission to edit this song.");
-        }
     }
 }

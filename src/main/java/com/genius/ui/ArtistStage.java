@@ -157,10 +157,15 @@ public class ArtistStage extends BaseStage {
                     selectedSongs.forEach(song -> songIds.add(song.getId()));  // Collect song IDs
 
                     // Step 6: Create the album and add selected songs
-                    AlbumService.createAlbum(title, releaseDate, artist.getUsername(), songIds);
-                    showText("Album Created", "Your album has been created successfully!");
-                    Stage subStage = (Stage) addButton.getScene().getWindow();  // Get the current stage
-                    subStage.close();
+                    try {
+                        AlbumService.createAlbum(title, releaseDate, artist.getUsername(), songIds);
+                        showText("Album Created", "Your album has been created successfully!");
+                        Stage subStage = (Stage) addButton.getScene().getWindow();  // Get the current stage
+                        subStage.close();
+                    } catch (IllegalArgumentException ex) {
+                        showText("Error", ex.getMessage());
+                    }
+
                 });
 
                 // Step 7: Layout for the album creation UI
@@ -193,7 +198,10 @@ public class ArtistStage extends BaseStage {
                 }
             });
             Button back = new Button("Back");
-            back.setOnAction(q -> ArtistStage.show(stage, artist));
+            back.setOnAction(q -> {
+                Stage subStage = (Stage) back.getScene().getWindow();
+                subStage.close();
+            });
             VBox layout = new VBox(10, new Label("Your Songs"), songListView,back);
             layout.setStyle("-fx-padding: 20");
 
@@ -260,9 +268,21 @@ public class ArtistStage extends BaseStage {
     }
 
     private static void showAlbumEditWindow(Album album, Artist artist) {
+        List<Song> albumSongs = new ArrayList<>(SongService.getSongsByAlbum(album));
         ListView<Song> tracklistView = new ListView<>();
-        List<Song> albumSongs = SongService.getSongsByAlbum(album);
         tracklistView.getItems().addAll(albumSongs);
+        ListView<Song> availableSongsView = new ListView<>();
+        List<Song> availableSongs = new ArrayList<>(SongService.getSongsByArtist(artist.getUsername())
+                .stream().filter(song -> !album.getSongIds().contains(song.getId()))
+                .toList());
+        System.out.println("Available songs: " + availableSongs.size());
+        availableSongs.forEach(s -> System.out.println(s.getTitle()));
+        System.out.println("not Available songs: " + albumSongs.size());
+        albumSongs.forEach(s -> System.out.println(s.getTitle()));
+        System.out.println("all songs: " + SongService.getSongsByArtist(artist.getUsername()).size());
+        SongService.getSongsByArtist(artist.getUsername()).forEach(s -> System.out.println(s.getTitle()));
+
+
 
         tracklistView.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -276,19 +296,14 @@ public class ArtistStage extends BaseStage {
         removeSongButton.setOnAction(e -> {
             Song selectedSong = tracklistView.getSelectionModel().getSelectedItem();
             if (selectedSong != null) {
-                album.getSongIds().remove(selectedSong.getId());
+                AlbumService.removeSongFromAlbum(album.getId(), selectedSong.getId());
                 tracklistView.getItems().remove(selectedSong);
+                availableSongsView.getItems().add(selectedSong);
             }
         });
 
         // Add song selection functionality to add new songs to the album
-        ListView<Song> availableSongsView = new ListView<>();
-        List<Song> availableSongs = SongService.getSongsByArtist(artist.getUsername());
-        List<Song> songsNotInAlbum = availableSongs.stream()
-                .filter(song -> !album.getSongIds().contains(song.getId())) // Exclude already added songs
-                .collect(Collectors.toList());
-
-        availableSongsView.getItems().addAll(songsNotInAlbum);
+        availableSongsView.getItems().addAll(availableSongs);
 
         availableSongsView.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -304,7 +319,7 @@ public class ArtistStage extends BaseStage {
             if (selectedSong != null && !album.getSongIds().contains(selectedSong.getId())) {
                 album.addSong(selectedSong.getId());
                 tracklistView.getItems().add(selectedSong);
-                availableSongs.remove(selectedSong);
+                availableSongsView.getItems().remove(selectedSong);
             }
         });
 

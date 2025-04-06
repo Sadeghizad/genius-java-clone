@@ -17,6 +17,9 @@ public class Song {
     private String albumId; // null if single
     private final List<String> artistUsernames = new ArrayList<>();
     private final List<Comment> comments = new ArrayList<>();
+    private Set<String> viewedBy = new HashSet<>();
+
+
 
     public Song(String title, String lyrics, String genre, List<String> tags, LocalDate releaseDate, String albumId, List<String> artistUsernames) {
         this.title = title;
@@ -31,7 +34,16 @@ public class Song {
     public void incrementViews() {
         viewCount++;
     }
-
+    public Set<String> getViewedBy() {
+        if (viewedBy == null) viewedBy = new HashSet<>();
+        return viewedBy;
+    }
+    public boolean addView(String username) {
+        if (getViewedBy().contains(username)) return false;
+        viewedBy.add(username);
+        incrementViews();
+        return true;
+    }
     public void addComment(Comment comment) {
         comments.add(comment);
     }
@@ -83,5 +95,13 @@ public class Song {
     @Override
     public String toString() {
         return "Title: " + title + ", Genre: " + genre + ", Views: " + viewCount;
+    }
+
+    public String getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(String albumId) {
+        this.albumId = albumId;
     }
 }
