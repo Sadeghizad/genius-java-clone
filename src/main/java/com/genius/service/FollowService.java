@@ -9,6 +9,7 @@ import java.util.List;
 public class FollowService {
 
     public static void followArtist(User user, String artistUsername) {
+        // only users could done this so no need for more checking
         Account acc = DataStore.accounts.get(artistUsername);
         if (!(acc instanceof Artist)) {
             throw new IllegalArgumentException("No such artist.");

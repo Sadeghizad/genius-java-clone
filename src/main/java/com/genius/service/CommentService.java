@@ -11,8 +11,12 @@ import java.util.List;
 public class CommentService {
 
     public static Comment addComment(Account user, String content, Song song) {
-        Comment comment = new Comment(user, content, song); // constructor auto-adds to song
-        return comment;
+        if (user.getPermissions().contains(Account.Permission.COMMENT)) {
+            Comment comment = new Comment(user, content, song); // constructor auto-adds to song
+            return comment;
+        } else {
+            throw new IllegalArgumentException("You do not have permission to comment on this song.");
+        }
     }
 
     public static List<Comment> getComments(Song song) {

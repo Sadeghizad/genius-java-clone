@@ -1,9 +1,7 @@
 package com.genius.ui;
 
-import com.genius.model.Album;
-import com.genius.model.Artist;
-import com.genius.model.Song;
-import com.genius.model.User;
+import com.genius.data.DataStore;
+import com.genius.model.*;
 import com.genius.service.*;
 
 import javafx.scene.Scene;
@@ -314,6 +312,23 @@ public class UserStage extends BaseStage {
             sortBox.getItems().addAll("Title A-Z", "Most Viewed", "Least Viewed");
             sortBox.setValue("Title A-Z");
 
+            // ComboBoxes for filtering by genre, tag, and artist
+            ComboBox<String> genreComboBox = new ComboBox<>();
+            genreComboBox.getItems().addAll("Rock", "Pop", "Rap", "Classical", "Jazz", "Other");
+            genreComboBox.setPromptText("Filter by Genre");
+
+            ComboBox<String> tagComboBox = new ComboBox<>();
+            tagComboBox.getItems().addAll(SongService.getAllTags()); // Populate dynamically based on existing tags
+            tagComboBox.setPromptText("Filter by Tag");
+
+            ComboBox<String> artistComboBox = new ComboBox<>();
+            List<String> artistUsernames = DataStore.accounts.values().stream()
+                    .filter(account -> account instanceof Artist)
+                    .map(Account::getUsername)
+                    .toList();
+            artistComboBox.getItems().addAll(artistUsernames);
+            artistComboBox.setPromptText("Filter by Artist");
+
             ListView<Song> list = new ListView<>();
             list.getItems().addAll(SongService.getAllSongs());
 
@@ -329,10 +344,29 @@ public class UserStage extends BaseStage {
             Runnable updateList = () -> {
                 String keyword = searchField.getText().toLowerCase();
                 String sort = sortBox.getValue();
+                String genreFilter = genreComboBox.getValue();
+                String tagFilter = tagComboBox.getValue();
+                String artistFilter = artistComboBox.getValue();
 
                 var songs = SongService.getAllSongs().stream()
                         .filter(s -> s.getTitle().toLowerCase().contains(keyword));
 
+                // Filter by Genre
+                if (genreFilter != null && !genreFilter.isEmpty()) {
+                    songs = songs.filter(s -> s.getGenre().equalsIgnoreCase(genreFilter));
+                }
+
+                // Filter by Tag
+                if (tagFilter != null && !tagFilter.isEmpty()) {
+                    songs = songs.filter(s -> s.getTags().contains(tagFilter.toLowerCase()));
+                }
+
+                // Filter by Artist
+                if (artistFilter != null && !artistFilter.isEmpty()) {
+                    songs = songs.filter(s -> s.getArtistUsernames().contains(artistFilter));
+                }
+
+                // Sorting the filtered songs
                 switch (sort) {
                     case "Most Viewed" -> songs = songs.sorted((a, b) -> b.getViewCount() - a.getViewCount());
                     case "Least Viewed" -> songs = songs.sorted((a, b) -> a.getViewCount() - b.getViewCount());
@@ -342,16 +376,28 @@ public class UserStage extends BaseStage {
                 list.getItems().setAll(songs.toList());
             };
 
+            // Add listeners to update the list when any filter or sort option changes
             searchField.textProperty().addListener((obs, oldVal, newVal) -> updateList.run());
             sortBox.setOnAction(e2 -> updateList.run());
-
+            genreComboBox.setOnAction(e2 -> updateList.run());
+            tagComboBox.setOnAction(e2 -> updateList.run());
+            artistComboBox.setOnAction(e2 -> updateList.run());
+            Button resetFiltersButton = new Button("Reset Filters");
+            resetFiltersButton.setOnAction(e2 -> {
+                genreComboBox.setValue(null);  // Clear genre filter
+                tagComboBox.setValue(null);    // Clear tag filter
+                artistComboBox.setValue(null); // Clear artist filter
+                searchField.clear();           // Clear search field
+                updateList.run();              // Refresh the list after resetting
+            });
             list.setOnMouseClicked(ev -> {
                 Song selected = list.getSelectionModel().getSelectedItem();
                 if (selected != null) SongStage.show(stage, selected, user);
             });
+
             Button back = new Button("Back");
-            VBox layout = new VBox(10, new Label("All Songs"), searchField, sortBox, list,back);
-            layout.setStyle("-fx-padding: 20");
+            VBox layout = new VBox(10, new Label("All Songs"), searchField, sortBox, genreComboBox, tagComboBox, artistComboBox,resetFiltersButton, list, back);
+            layout.setStyle("-fx-padding: 20;");
 
             Stage songStage = new Stage();
             songStage.setScene(new Scene(layout, 500, 600));
@@ -362,6 +408,7 @@ public class UserStage extends BaseStage {
                 songStage.close();
             });
         });
+
 
         logout.setOnAction(e -> new Main().start(stage));
 

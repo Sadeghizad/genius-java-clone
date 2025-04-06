@@ -11,7 +11,7 @@ public class Song {
     private String lyrics;
     private String genre;
     private List<String> tags = new ArrayList<>();
-    private LocalDate releaseDate;
+    private final LocalDate releaseDate;
     private int viewCount = 0;
 
     private String albumId; // null if single
@@ -74,6 +74,10 @@ public class Song {
 
     public Album getAlbum() {
         return AlbumService.getAlbumById(albumId);
+    }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
     }
 
     @Override

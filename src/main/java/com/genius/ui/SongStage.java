@@ -1,9 +1,6 @@
 package com.genius.ui;
 
-import com.genius.model.Artist;
-import com.genius.model.Comment;
-import com.genius.model.Song;
-import com.genius.model.User;
+import com.genius.model.*;
 import com.genius.service.CommentService;
 import com.genius.service.EditService;
 import com.genius.service.SongService;
@@ -21,10 +18,11 @@ public class SongStage extends BaseStage {
 
         // Labels for Song details
         Label title = new Label("Title: " + song.getTitle());
-        Label lyrics = new Label("Lyrics:\n" + song.getLyrics());
         Label views = new Label("Views: " + song.getViewCount());
         Label artists = new Label("Artists: " + song.getArtistUsernames());
-
+        Label genreLabel = new Label("Genre: " + song.getGenre());  // Show the genre of the song
+        Label tagsLabel = new Label("Tags: " + String.join(", ", song.getTags()));  // Show tags, joined by commas
+        Label releaseDate = new Label("Release: " + song.getReleaseDate());
         // TextArea for lyrics editing (for user to suggest changes)
         TextArea lyricsArea = new TextArea(song.getLyrics());
         lyricsArea.setEditable(true); // Allow editing the lyrics
@@ -117,7 +115,7 @@ public class SongStage extends BaseStage {
             UserStage.show(stage,user);
         });
         // Layout for the song page
-        VBox layout = new VBox(10, title, artists, views, lyricsArea, submitForReviewBtn, commentInputArea, sendCommentBtn, sortBox, scrollPane, showMoreCommentsBtn, back);
+        VBox layout = new VBox(10, title, artists, views,releaseDate, genreLabel,tagsLabel,lyricsArea, submitForReviewBtn, commentInputArea, sendCommentBtn, sortBox, scrollPane, showMoreCommentsBtn, back);
         layout.setStyle("-fx-padding: 20; -fx-alignment: center-left");
 
         // Create and show the song page stage
@@ -127,32 +125,32 @@ public class SongStage extends BaseStage {
     }
 
     public static void show(Stage stage, Song song, Artist artist) {
-        // Display song details
         Label songTitle = new Label("Song Title: " + song.getTitle());
         Label songLyricsLabel = new Label("Lyrics: ");
         TextArea songLyricsArea = new TextArea(song.getLyrics());
         songLyricsArea.setEditable(false); // Make it non-editable initially
 
-        // Button to allow editing lyrics
         Button editButton = new Button("Edit Lyrics");
+
         editButton.setOnAction(e -> {
             songLyricsArea.setEditable(true); // Enable editing
             editButton.setDisable(true);
         });
 
-        // Button to submit edited lyrics
         Button submitButton = new Button("Submit Changes");
         submitButton.setOnAction(e -> {
-            // Update song's lyrics in memory
             String newLyrics = songLyricsArea.getText();
-            song.setLyrics(newLyrics);  // Update lyrics in song object
-            SongService.updateSong(song);  // Persist the updated song
+            song.setLyrics(newLyrics);
+            SongService.updateSong(artist,song);
 
             showText("Song Updated", "Lyrics updated successfully!");
 
-            songLyricsArea.setEditable(false); // Disable further editing
+            songLyricsArea.setEditable(false);
             editButton.setDisable(false);
         });
+        if (!artist.getPermissions().contains(Account.Permission.EDIT)) {
+            editButton.setDisable(true);
+        }
         Button back = new Button("Back");
         back.setOnAction(q -> {
             // Close the current subStage using the `stage` parameter

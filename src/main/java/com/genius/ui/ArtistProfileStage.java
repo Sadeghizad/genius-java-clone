@@ -69,7 +69,7 @@ public class ArtistProfileStage extends BaseStage {
 
         albumListView.setOnMouseClicked(ev -> {
             Album selectedAlbum = albumListView.getSelectionModel().getSelectedItem();
-            if (selectedAlbum != null) {
+            if (selectedAlbum != null && loggedInUser != null) {
                 AlbumStage.show(stage, selectedAlbum, loggedInUser);
             }
         });
@@ -94,7 +94,7 @@ public class ArtistProfileStage extends BaseStage {
 
         songListView.setOnMouseClicked(ev -> {
             Song selectedSong = songListView.getSelectionModel().getSelectedItem();
-            if (selectedSong != null) {
+            if (selectedSong != null && loggedInUser != null) {
                 SongStage.show(stage, selectedSong, loggedInUser);  // Navigate to song page
             }
         });

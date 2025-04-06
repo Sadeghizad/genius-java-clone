@@ -1,5 +1,7 @@
 package com.genius.ui;
 
+import com.genius.data.DataStore;
+import com.genius.model.Account;
 import com.genius.model.Album;
 import com.genius.model.Artist;
 import com.genius.model.Song;
@@ -34,17 +36,86 @@ public class ArtistStage extends BaseStage {
 
 
         createSong.setOnAction(e -> {
-            TextInputDialog titleDialog = new TextInputDialog();
-            titleDialog.showAndWait().ifPresent(title -> {
-                titleDialog.setHeaderText("Enter song title:");
-                TextInputDialog lyricsDialog = new TextInputDialog();
-                lyricsDialog.setHeaderText("Enter lyrics:");
-                lyricsDialog.showAndWait().ifPresent(lyrics -> {
-                    SongService.createSong(title, lyrics, "unknown", List.of(), LocalDate.now(), null, List.of(artist.getUsername()));
-                    showText("Done", "Song created successfully.");
-                });
+            // Text fields for song title and lyrics
+            TextField titleField = new TextField();
+            titleField.setPromptText("Enter Song Title");
+
+            TextArea lyricsArea = new TextArea();
+            lyricsArea.setPromptText("Enter Song Lyrics");
+
+            // ComboBox for genre selection with predefined genres
+            ComboBox<String> genreComboBox = new ComboBox<>();
+            genreComboBox.getItems().addAll("Rock", "Pop", "Rap", "Classical", "Jazz", "Other");
+            genreComboBox.setPromptText("Choose or enter a genre");
+
+            // TextField for tags input (you can later modify it to use multi-selection or predefined tags)
+            TextField tagsField = new TextField();
+            tagsField.setPromptText("Enter song tags (comma separated)");
+
+            // Album and artist inputs (optional)
+            ComboBox<String> albumComboBox = new ComboBox<>();
+
+// Populate ComboBox with albums from the artist
+            List<Album> artistAlbums = AlbumService.getAllAlbumsByArtist(artist.getUsername());
+            albumComboBox.getItems().addAll(
+                    artistAlbums.stream().map(Album::getTitle).toList()
+            );
+            albumComboBox.setPromptText("Select Album");
+
+            ListView<String> artistListView = new ListView<>();
+            List<String> allArtistUsernames = DataStore.accounts.values().stream()
+                    .filter(account -> account instanceof Artist)
+                    .map(Account::getUsername)
+                    .toList();
+            artistListView.getItems().addAll(allArtistUsernames);
+            artistListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            // Submit Button
+            Button submitButton = new Button("Create Song");
+            submitButton.setOnAction(event -> {
+                String title = titleField.getText();
+                String lyrics = lyricsArea.getText();
+                String genre = genreComboBox.getValue();
+                List<String> tags = List.of(tagsField.getText().split(","));
+                List<String> artistUsernames = new ArrayList<>(artistListView.getSelectionModel().getSelectedItems());
+                artistUsernames.add(artist.getUsername());
+                String selectedAlbumTitle = albumComboBox.getValue();
+
+
+                Album selectedAlbum = null;
+                if (selectedAlbumTitle != null) {
+                    // If album is selected, get the album by title
+                    selectedAlbum = artistAlbums.stream()
+                            .filter(album -> album.getTitle().equals(selectedAlbumTitle))
+                            .findFirst()
+                            .orElse(null);
+                }
+            try {
+                // Create the song
+                Song song= SongService.createSong(title, lyrics, genre, tags, LocalDate.now(), selectedAlbum != null ? selectedAlbum.getId() : null, artistUsernames);
+                if (selectedAlbum != null) {
+                    AlbumService.addSongsToAlbum(selectedAlbum.getId(), List.of(song.getId()));
+                }
+                showText("Done", "Song created successfully.");
+                Stage songStage=(Stage) submitButton.getScene().getWindow();
+                songStage.close();
+            } catch (IllegalArgumentException ex) {
+                // Show validation error message
+                showText("Error", ex.getMessage());
+            }
             });
+
+            // Layout for the song creation form
+            VBox layout = new VBox(10, titleField, lyricsArea, artistListView,genreComboBox, tagsField, albumComboBox, submitButton);
+            layout.setStyle("-fx-padding: 20; -fx-alignment: center");
+
+            // Create and show the stage
+            Stage songStage = new Stage();
+            songStage.setScene(new Scene(layout, 500, 400));
+            songStage.setTitle("Create New Song");
+            songStage.show();
         });
+
+
 
         createAlbum.setOnAction(e -> {
             // Step 1: Input for album title
