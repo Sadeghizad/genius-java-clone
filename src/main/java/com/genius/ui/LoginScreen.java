@@ -24,6 +24,7 @@ public class LoginScreen {
 
         loginBtn.setOnAction(e -> {
             try {
+                message.setText("");
                 Account acc = AccountService.login(usernameField.getText(), passwordField.getText());
                 if (acc instanceof User user) {
                     UserStage.show(stage, user);
@@ -31,6 +32,9 @@ public class LoginScreen {
                     ArtistStage.show(stage, artist);
                 } else if (acc instanceof Admin admin) {
                     AdminStage.show(stage, admin);
+                }else{
+                    System.out.println("Unknown account type: " + acc.getClass().getSimpleName());
+                    message.setText("Login failed: Unknown account type.");
                 }
             } catch (Exception ex) {
                 message.setText(ex.getMessage());

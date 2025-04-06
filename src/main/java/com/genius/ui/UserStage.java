@@ -30,20 +30,132 @@ public class UserStage extends BaseStage {
 
         viewTopSongs.setOnAction(e -> {
             List<Song> top = ChartService.getTopSongs(5);
-            showList("Top Songs", top);
+
+            // Create a ListView to display top songs
+            ListView<Song> songListView = new ListView<>();
+            songListView.getItems().addAll(top);
+
+            // Set cell factory for the ListView
+            songListView.setCellFactory(param -> new ListCell<Song>() {
+                @Override
+                protected void updateItem(Song song, boolean empty) {
+                    super.updateItem(song, empty);
+                    if (empty || song == null) {
+                        setText(null);
+                    } else {
+                        setText(song.getTitle() + " (" + song.getViewCount() + " views)");
+                    }
+                }
+            });
+
+            // Add mouse click event to show song details
+            songListView.setOnMouseClicked(event -> {
+                Song selectedSong = songListView.getSelectionModel().getSelectedItem();
+                if (selectedSong != null) {
+                    SongStage.show(stage, selectedSong, user);  // Show song details in a new stage
+                }
+            });
+
+            // Create layout for the stage
+            Button back = new Button("Back");
+            VBox layout = new VBox(10, new Label("Top Songs"), songListView,back);
+            layout.setStyle("-fx-padding: 20");
+
+            // Create and show the stage for top songs
+            Stage topSongsStage = new Stage();
+            topSongsStage.setScene(new Scene(layout, 500, 600));
+            topSongsStage.setTitle("Top Songs");
+            topSongsStage.show();
+            back.setOnAction(q -> {
+                // Close the current subStage using the `stage` parameter
+                topSongsStage.close();
+            });
         });
 
         viewFollowedArtists.setOnAction(e -> {
             var artists = FollowService.getFollowedArtists(user);
-            StringBuilder sb = new StringBuilder();
-            artists.forEach(a -> sb.append(a.getName()).append(" (").append(a.getUsername()).append(")\n"));
-            showText("Followed Artists", sb.toString());
-        });
 
+            // Create a ListView to display followed artists
+            ListView<Artist> artistListView = new ListView<>();
+            artistListView.getItems().addAll(artists);
+
+            // Set cell factory for the ListView
+            artistListView.setCellFactory(param -> new ListCell<Artist>() {
+                @Override
+                protected void updateItem(Artist artist, boolean empty) {
+                    super.updateItem(artist, empty);
+                    if (empty || artist == null) {
+                        setText(null);
+                    } else {
+                        setText(artist.getName() + " (" + artist.getUsername() + ")");
+                    }
+                }
+            });
+
+            // Add mouse click event to show artist profile
+            artistListView.setOnMouseClicked(event -> {
+                Artist selectedArtist = artistListView.getSelectionModel().getSelectedItem();
+                if (selectedArtist != null) {
+                    ArtistProfileStage.show(stage, selectedArtist, user);  // Show artist profile in a new stage
+                }
+            });
+            Button back = new Button("Back");
+            // Create layout for the stage
+            VBox layout = new VBox(10, new Label("Followed Artists"), artistListView,back);
+            layout.setStyle("-fx-padding: 20");
+
+            // Create and show the stage for followed artists
+            Stage followedArtistsStage = new Stage();
+            followedArtistsStage.setScene(new Scene(layout, 500, 600));
+            followedArtistsStage.setTitle("Followed Artists");
+            followedArtistsStage.show();
+            back.setOnAction(q -> {
+                // Close the current subStage using the `stage` parameter
+                followedArtistsStage.close();
+            });
+        });
         viewNewSongs.setOnAction(e -> {
             var songs = FollowService.getNewSongsFromFollowedArtists(user);
-            var unique = new ArrayList<>(new HashSet<>(songs));
-            showList("New Songs from Followed Artists", unique);
+            var unique = new ArrayList<>(new HashSet<>(songs));  // Remove duplicates
+
+            // Create a ListView to display new songs from followed artists
+            ListView<Song> songListView = new ListView<>();
+            songListView.getItems().addAll(unique);
+
+            // Set cell factory for the ListView
+            songListView.setCellFactory(param -> new ListCell<Song>() {
+                @Override
+                protected void updateItem(Song song, boolean empty) {
+                    super.updateItem(song, empty);
+                    if (empty || song == null) {
+                        setText(null);
+                    } else {
+                        setText(song.getTitle() + " (" + song.getViewCount() + " views)");
+                    }
+                }
+            });
+
+            // Add mouse click event to show song details
+            songListView.setOnMouseClicked(event -> {
+                Song selectedSong = songListView.getSelectionModel().getSelectedItem();
+                if (selectedSong != null) {
+                    SongStage.show(stage, selectedSong, user);  // Show song details in a new stage
+                }
+            });
+
+            Button back = new Button("Back");
+            // Create layout for the stage
+            VBox layout = new VBox(10, new Label("New Songs from Followed Artists"), songListView,back);
+            layout.setStyle("-fx-padding: 20");
+            // Create and show the stage for new songs
+            Stage newSongsStage = new Stage();
+            newSongsStage.setScene(new Scene(layout, 500, 600));
+            newSongsStage.setTitle("New Songs from Followed Artists");
+            newSongsStage.show();
+            back.setOnAction(q -> {
+                // Close the current subStage using the `stage` parameter
+                newSongsStage.close();
+            });
         });
 
         exploreArtistProfile.setOnAction(e -> {

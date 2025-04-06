@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Account {
+public class Account {
     private String name;
     private int age;
     private String email;

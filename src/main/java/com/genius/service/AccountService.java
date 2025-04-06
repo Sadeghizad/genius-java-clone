@@ -36,7 +36,7 @@ public class AccountService {
         if (!acc.getPassword().equals(hashedInput)) {
             throw new IllegalArgumentException("Incorrect password.");
         }
-
+        
         return acc;
     }
 
