@@ -311,7 +311,7 @@ public class ArtistStage extends BaseStage {
         addSongButton.setOnAction(e -> {
             Song selectedSong = availableSongsView.getSelectionModel().getSelectedItem();
             if (selectedSong != null && !album.getSongIds().contains(selectedSong.getId())) {
-                album.addSong(selectedSong.getId());
+                AlbumService.addSongsToAlbum(album.getId(),List.of(selectedSong.getId()));
                 tracklistView.getItems().add(selectedSong);
                 availableSongsView.getItems().remove(selectedSong);
             }
