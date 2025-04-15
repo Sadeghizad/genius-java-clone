@@ -106,7 +106,7 @@ public class ArtistStage extends BaseStage {
 
             // Layout for the song creation form
             VBox layout = new VBox(10, titleField, lyricsArea, artistListView,genreComboBox, tagsField, albumComboBox, submitButton);
-            layout.setStyle("-fx-padding: 20; -fx-alignment: center");
+            layout.setStyle("-fx-padding: 20; -fx-alignment: center; -fx-background-color: #e7ce55;");
 
             // Create and show the stage
             Stage songStage = new Stage();
@@ -170,7 +170,7 @@ public class ArtistStage extends BaseStage {
 
                 // Step 7: Layout for the album creation UI
                 VBox albumLayout = new VBox(10, new Label("Select Songs for Album:"), songListView, addButton);
-                albumLayout.setStyle("-fx-padding: 20");
+                albumLayout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
                 Stage albumStage = new Stage();
                 albumStage.setScene(new Scene(albumLayout, 500, 600));
@@ -203,7 +203,7 @@ public class ArtistStage extends BaseStage {
                 subStage.close();
             });
             VBox layout = new VBox(10, new Label("Your Songs"), songListView,back);
-            layout.setStyle("-fx-padding: 20");
+            layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55");
 
             Stage manageSongsStage = new Stage();
             manageSongsStage.setScene(new Scene(layout, 500, 600));
@@ -231,7 +231,7 @@ public class ArtistStage extends BaseStage {
             });
 
             VBox layout = new VBox(10, new Label("Your Albums"), albumListView);
-            layout.setStyle("-fx-padding: 20");
+            layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
             Stage manageAlbumsStage = new Stage();
             manageAlbumsStage.setScene(new Scene(layout, 500, 600));
@@ -263,7 +263,7 @@ public class ArtistStage extends BaseStage {
         logout.setOnAction(e -> new Main().start(stage));
 
         VBox layout = new VBox(10, welcome, viewProfile, createSong, createAlbum, approveEdits, manageProfile,manageSongs,manageAlbums, logout);
-        layout.setStyle("-fx-padding: 20; -fx-alignment: center");
+        layout.setStyle("-fx-padding: 20; -fx-alignment: center; -fx-background-color: #e7ce55;");
         stage.setScene(new Scene(layout, 500, 500));
     }
 
@@ -275,12 +275,6 @@ public class ArtistStage extends BaseStage {
         List<Song> availableSongs = new ArrayList<>(SongService.getSongsByArtist(artist.getUsername())
                 .stream().filter(song -> !album.getSongIds().contains(song.getId()))
                 .toList());
-        System.out.println("Available songs: " + availableSongs.size());
-        availableSongs.forEach(s -> System.out.println(s.getTitle()));
-        System.out.println("not Available songs: " + albumSongs.size());
-        albumSongs.forEach(s -> System.out.println(s.getTitle()));
-        System.out.println("all songs: " + SongService.getSongsByArtist(artist.getUsername()).size());
-        SongService.getSongsByArtist(artist.getUsername()).forEach(s -> System.out.println(s.getTitle()));
 
 
 
@@ -326,7 +320,7 @@ public class ArtistStage extends BaseStage {
         VBox layout = new VBox(10, new Label("Tracklist for: " + album.getTitle()),
                 tracklistView, removeSongButton,
                 new Label("Available Songs to Add"), availableSongsView, addSongButton);
-        layout.setStyle("-fx-padding: 20");
+        layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
         Stage albumEditStage = new Stage();
         albumEditStage.setScene(new Scene(layout, 500, 600));

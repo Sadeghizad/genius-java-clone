@@ -41,7 +41,7 @@ public class AlbumStage {
         back.setOnAction(e -> UserStage.show(stage, user));
 
         VBox layout = new VBox(10, title, artist, date, new Label("Tracklist:"), tracklist, back);
-        layout.setStyle("-fx-padding: 20");
+        layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
         stage.setScene(new Scene(layout, 500, 600));
     }

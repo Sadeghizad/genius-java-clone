@@ -43,7 +43,7 @@ public class LoginScreen {
         Button back = new Button("Back");
         back.setOnAction(e -> new Main().start(stage));
         VBox layout = new VBox(10, label, usernameField, passwordField, loginBtn, message, back);
-        layout.setStyle("-fx-padding: 20; -fx-alignment: center");
+        layout.setStyle("-fx-padding: 20; -fx-alignment: center; -fx-background-color: #e7ce55;");
 
         stage.setScene(new Scene(layout, 400, 300));
     }

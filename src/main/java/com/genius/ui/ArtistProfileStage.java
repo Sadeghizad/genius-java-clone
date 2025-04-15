@@ -86,7 +86,7 @@ public class ArtistProfileStage extends BaseStage {
                     // Highlight most viewed songs
                     setText(item.getTitle() + " (" + item.getViewCount() + " views)");
                     if (item.getViewCount() > 1000) {
-                        setStyle("-fx-font-weight: bold; -fx-text-fill: #e7ce55;");
+                        setStyle("-fx-font-weight: bold; -fx-text-fill: #e7ce55; -fx-background-color: #e7ce55;");
                     }
                 }
             }
@@ -106,7 +106,7 @@ public class ArtistProfileStage extends BaseStage {
             profileLayout.getChildren().add(followButton);
         }
 
-        profileLayout.setStyle("-fx-padding: 20");
+        profileLayout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
         // Create and show the profile stage
         Stage profileStage = new Stage();

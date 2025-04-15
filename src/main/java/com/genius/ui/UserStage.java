@@ -57,7 +57,7 @@ public class UserStage extends BaseStage {
             // Create layout for the stage
             Button back = new Button("Back");
             VBox layout = new VBox(10, new Label("Top Songs"), songListView,back);
-            layout.setStyle("-fx-padding: 20");
+            layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
             // Create and show the stage for top songs
             Stage topSongsStage = new Stage();
@@ -100,7 +100,7 @@ public class UserStage extends BaseStage {
             Button back = new Button("Back");
             // Create layout for the stage
             VBox layout = new VBox(10, new Label("Followed Artists"), artistListView,back);
-            layout.setStyle("-fx-padding: 20");
+            layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
             // Create and show the stage for followed artists
             Stage followedArtistsStage = new Stage();
@@ -144,7 +144,7 @@ public class UserStage extends BaseStage {
             Button back = new Button("Back");
             // Create layout for the stage
             VBox layout = new VBox(10, new Label("New Songs from Followed Artists"), songListView,back);
-            layout.setStyle("-fx-padding: 20");
+            layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
             // Create and show the stage for new songs
             Stage newSongsStage = new Stage();
             newSongsStage.setScene(new Scene(layout, 500, 600));
@@ -225,7 +225,7 @@ public class UserStage extends BaseStage {
 
             // Layout for the artist exploration page
             VBox layout = new VBox(10, new Label("Artists"), searchField, filterBox, artistListView,back);
-            layout.setStyle("-fx-padding: 20");
+            layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
             // Stage for displaying the artist exploration page
             Stage artistStage = new Stage();
@@ -292,7 +292,7 @@ public class UserStage extends BaseStage {
             Button back = new Button("Back");
 
             VBox box = new VBox(10, new Label("Albums"),searchField, filterBox, list,back);
-            box.setStyle("-fx-padding: 20");
+            box.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
             Stage albumStage = new Stage();
             albumStage.setScene(new Scene(box, 500, 600));
@@ -397,7 +397,7 @@ public class UserStage extends BaseStage {
 
             Button back = new Button("Back");
             VBox layout = new VBox(10, new Label("All Songs"), searchField, sortBox, genreComboBox, tagComboBox, artistComboBox,resetFiltersButton, list, back);
-            layout.setStyle("-fx-padding: 20;");
+            layout.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
             Stage songStage = new Stage();
             songStage.setScene(new Scene(layout, 500, 600));
@@ -413,7 +413,7 @@ public class UserStage extends BaseStage {
         logout.setOnAction(e -> new Main().start(stage));
 
         VBox layout = new VBox(10, welcome, viewTopSongs, viewFollowedArtists, viewNewSongs,exploreArtistProfile,exploreSongs,exploreAlbums, logout);
-        layout.setStyle("-fx-padding: 20; -fx-alignment: center");
+        layout.setStyle("-fx-padding: 20; -fx-alignment: center; -fx-background-color: #e7ce55;");
 
         stage.setScene(new Scene(layout, 450, 500));
     }

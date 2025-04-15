@@ -89,7 +89,7 @@ public class AdminStage extends BaseStage {
 
 
         VBox layout = new VBox(10, welcome, reviewEdits,approveArtists,manageAccounts, logout);
-        layout.setStyle("-fx-padding: 20; -fx-alignment: center");
+        layout.setStyle("-fx-padding: 20; -fx-alignment: center; -fx-background-color: #e7ce55;");
 
         stage.setScene(new Scene(layout, 450, 400));
     }
@@ -106,7 +106,7 @@ public class AdminStage extends BaseStage {
                 new Label("Filter by Type:"), filter,
                 new Label("All Accounts:"), list, delete
         );
-        box.setStyle("-fx-padding: 20");
+        box.setStyle("-fx-padding: 20; -fx-background-color: #e7ce55;");
 
         Stage subStage = new Stage();
         subStage.setScene(new Scene(box, 500, 550));
